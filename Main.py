@@ -4,6 +4,9 @@ from qrcode.image.pure import PyPNGImage
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
+import tksvg
+from PIL import ImageTk, Image
+import os
 
 #Creating the window
 win = Tk()
@@ -29,9 +32,28 @@ def generateCode():
     qr.make(fit = True) #Making the entire QR Code space utilized
     img = qr.make_image() #Generating the QR Code
     fileDir=loc.get()+'\\'+name.get() #Getting the directory where the file has to be save
-    img.save(f'{fileDir}{format}') #Saving the QR Code
-    #Showing the pop up message on saving the file
-    messagebox.showinfo("QR Code Generator","QR Code is saved successfully!")
+    finalDir=fileDir + format
+    img.save(f'{finalDir}') #Saving the QR Code
+
+    # Showing the successful saving of the QR Code
+    FrameImg = Frame(win,bg="DarkTurquoise")
+    FrameImg.place(relx=0.1,rely=0.5,relwidth=0.7,relheight=0.4)
+    
+    successLabel = Label(FrameImg,text="QR Code is saved successfully!",bg="DarkTurquoise",fg='azure',font=('FiraMono',14,'bold'))
+    successLabel.place(relx=0.05,rely=0.1, relheight=0.08)
+
+    if fileFormat.get() == 'SVG':
+        svgImage = tksvg.SvgImage(file=finalDir, scaletoheight = 250)
+        panel = Label(FrameImg, image=svgImage)
+        panel.place(relx=0.05,rely=0.2)
+    else:
+        openedImage = Image.open(finalDir)
+        openedImage = openedImage.resize((250,250))
+        photoImage = ImageTk.PhotoImage(openedImage)
+        panel = Label(FrameImg, image=photoImage)
+        panel.image = photoImage
+        panel.place(relx=0.05,rely=0.2)
+
     
 #Label for the window
 headingFrame = Frame(win,bg="azure",bd=5)
