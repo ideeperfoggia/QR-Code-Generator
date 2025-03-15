@@ -15,16 +15,14 @@ win.config(bg='DarkTurquoise')
 def generateCode():
     #Select an appropriate factory
     if fileFormat.get() == 'SVG':
-        messagebox.showinfo("QR Code Generator","SVG")
-
         factory = qrcode.image.svg.SvgImage
         format = ".svg"
     else:
-        messagebox.showinfo("QR Code Generator","PNG")
         factory = PyPNGImage
         format = ".png"
     #Creating a QRCode object of the size specified by the user
-    qr = qrcode.QRCode(version = size.get(),box_size = 10,border = 5, image_factory=factory) 
+    # qr = qrcode.QRCode(version = size.get(),box_size = 10,border = 5, image_factory=factory) 
+    qr = qrcode.QRCode(image_factory=factory) 
     qr.add_data(text.get()) #Adding the data to be encoded to the QRCode object
     qr.make(fit = True) #Making the entire QR Code space utilized
     img = qr.make_image() #Generating the QR Code
